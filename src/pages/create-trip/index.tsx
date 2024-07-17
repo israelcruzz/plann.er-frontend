@@ -1,4 +1,13 @@
-import { MapPin, Calendar, Settings2, ArrowRight, X } from "lucide-react";
+import {
+  MapPin,
+  Calendar,
+  Settings2,
+  ArrowRight,
+  X,
+  UserRoundPlus,
+  AtSign,
+  Plus,
+} from "lucide-react";
 import { Button } from "../../components/button";
 
 export function CreateTripPage() {
@@ -11,7 +20,8 @@ export function CreateTripPage() {
             Convide seus amigos e planeje sua próxima viagem!
           </p>
 
-          <div className="h-16 bg-zinc-900 px-4 rounded-xl flex items-center shadow-shape gap-3">
+          {/* Input 1 */}
+          <div className="w-[664px] h-16 bg-zinc-900 px-4 rounded-xl flex items-center shadow-shape gap-3">
             <div className="flex items-center gap-2 flex-1">
               <MapPin className="size-5 text-zinc-400" />
               <input
@@ -41,10 +51,89 @@ export function CreateTripPage() {
             </div>
           </div>
 
+          {/* Input 2 */}
+          <div className="w-[664px] h-16 bg-zinc-900 px-4 rounded-xl flex items-center shadow-shape gap-3">
+            <button className="flex items-center gap-2 flex-1 text-left">
+              <UserRoundPlus className="size-5 text-zinc-400" />
+              <span className="text-zinc-400 text-lg flex-1">
+                Quem estará na viagem?
+              </span>
+            </button>
+
+            <Button variant="primary">
+              <span className="font-bold text-base">Confirmar Viagem</span>
+              <ArrowRight className="size-5" />
+            </Button>
+          </div>
+
           <p className="text-sm text-zinc-500">
-          Ao planejar sua viagem pela plann.er você automaticamente concorda <br />
-          com nossos <a className="text-zinc-300 underline" href="#">termos de uso</a> e <a className="text-zinc-300 underline" href="#">políticas de privacidade</a>.
-        </p>
+            Ao planejar sua viagem pela plann.er você automaticamente concorda{" "}
+            <br />
+            com nossos{" "}
+            <a className="text-zinc-300 underline" href="#">
+              termos de uso
+            </a>{" "}
+            e{" "}
+            <a className="text-zinc-300 underline" href="#">
+              políticas de privacidade
+            </a>
+            .
+          </p>
+
+          {/* Modal guests */}
+          <div className="fixed inset-0 bg-black/60 flex items-center justify-center hidden">
+            <div className="w-[640px] rounded-xl py-5 px-6 shadow-shape bg-zinc-900 space-y-5">
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <h1 className="font-lg font-semibold">
+                    Selecionar convidados
+                  </h1>
+                  <X className="size-5 text-zinc-400 hover:cursor-pointer hover:text-white" />
+                </div>
+                <p className="text-sm text-zinc-400 text-left">
+                  Os convidados irão receber e-mails para confirmar a
+                  participação na viagem.
+                </p>
+
+                <div>
+                  <div className="flex flex-wrap gap-2">
+                    <div className="py-1.5 px-2.5 rounded-md bg-zinc-800 flex justify-between items-center gap-2">
+                      <span className="text-zinc-300">
+                        israelcruzz@contato.com
+                      </span>
+                      <X className="size-4 text-zinc-400" />
+                    </div>
+
+                    <div className="py-1.5 px-2.5 rounded-md bg-zinc-800 flex justify-between items-center gap-2">
+                      <span className="text-zinc-300">
+                        israelcruzz@contato.com
+                      </span>
+                      <X className="size-4 text-zinc-400" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="w-full h-px bg-zinc-800" />
+
+                <form className="p-2.5 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2">
+                  <div className="px-2 flex items-center flex-1 gap-2">
+                    <AtSign className="text-zinc-400 size-5" />
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="Digite o email do convidado"
+                      className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
+                    />
+                  </div>
+
+                  <Button type="submit">
+                    Convidar
+                    <Plus className="size-5" />
+                  </Button>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </main>
