@@ -10,8 +10,15 @@ import {
   User,
 } from "lucide-react";
 import { Button } from "../../components/button";
+import { DateRange, DayPicker } from "react-day-picker";
+import { ptBR } from "date-fns/locale";
+import { useState } from "react";
 
 export function CreateTripPage() {
+  const [eventStartAndEndDates, setEventStartAndEndDates] = useState<
+    DateRange | undefined
+  >();
+
   return (
     <main className="h-screen flex items-center justify-center bg-pattern bg-no-repeat bg-center">
       <div className="max-w-3xl w-full px-6 text-center space-y-10">
@@ -137,7 +144,7 @@ export function CreateTripPage() {
           </div>
 
           {/* Modal Confirm */}
-          <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
+          <div className="fixed inset-0 bg-black/60 flex items-center justify-center hidden">
             <div className="w-[640px] rounded-xl py-5 px-6 shadow-shape bg-zinc-900 space-y-5">
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
@@ -185,6 +192,34 @@ export function CreateTripPage() {
                     </span>
                   </Button>
                 </form>
+              </div>
+            </div>
+          </div>
+
+          {/* Data Picker */}
+          <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
+            <div className="w-[360px] rounded-xl py-5 px-6 shadow-shape bg-zinc-900 space-y-5">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <h2 className="font-lg font-semibold">Selecione a data</h2>
+                  <button>
+                    <X className="size-5 text-zinc-400 hover:text-white hover:cursor-pointer" />
+                  </button>
+                </div>
+
+                <DayPicker
+                  locale={ptBR}
+                  mode="range"
+                  disabled={{
+                    before: new Date(
+                      new Date().setDate(new Date().getDate() + 1)
+                    ),
+                  }}
+                  selected={eventStartAndEndDates}
+                  onSelect={setEventStartAndEndDates}
+                  onDayClick={() => console.log(eventStartAndEndDates)}
+                  
+                />
               </div>
             </div>
           </div>
