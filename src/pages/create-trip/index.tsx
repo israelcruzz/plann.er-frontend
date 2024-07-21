@@ -13,11 +13,61 @@ import { Button } from "../../components/button";
 import { DateRange, DayPicker } from "react-day-picker";
 import { ptBR } from "date-fns/locale";
 import { useState } from "react";
+import { format } from "date-fns";
 
 export function CreateTripPage() {
   const [eventStartAndEndDates, setEventStartAndEndDates] = useState<
     DateRange | undefined
   >();
+  const [modalPickerDate, setModalPickerDate] = useState<boolean>(false);
+  const [modalGuestPeopleInvite, setModalGuestPeopleInvite] =
+    useState<boolean>(false);
+  const [modalConfirmTrip, setModalConfirmTrip] = useState<boolean>(false);
+  const [inputGuestPeopleInvite, setInputGuestPeopleInvite] =
+    useState<boolean>(false);
+
+  const handleViewInputGuestPeopleInvite = () => {
+    setInputGuestPeopleInvite(true);
+  };
+
+  const handleExitViewInputGuestPeopleInvite = () => {
+    setInputGuestPeopleInvite(false);
+  };
+
+  const handleOpenModalPickerDate = () => {
+    setModalPickerDate(true);
+  };
+
+  const handleExitModalPickerDate = () => {
+    setModalPickerDate(false);
+  };
+
+  const handleOpenModalGuestsInvite = () => {
+    setModalGuestPeopleInvite(true);
+  };
+
+  const handleExitModalGuestsInvite = () => {
+    setModalGuestPeopleInvite(false);
+  };
+
+  const handleOpenModalConfirmTrip = () => {
+    setModalConfirmTrip(true);
+  };
+
+  const handleExitModalConfirmTrip = () => {
+    setModalConfirmTrip(false);
+  };
+
+  const displayDate =
+    eventStartAndEndDates &&
+    eventStartAndEndDates.from &&
+    eventStartAndEndDates.to
+      ? format(eventStartAndEndDates.from, "d' de 'LLL")
+          .concat(" até ")
+          .concat(format(eventStartAndEndDates.to, "d' de 'LLL"))
+      : null;
+
+  console.log("Pick Date: " + displayDate);
 
   return (
     <main className="h-screen flex items-center justify-center bg-pattern bg-no-repeat bg-center">
@@ -40,39 +90,54 @@ export function CreateTripPage() {
             </div>
 
             <div className="flex gap-2 items-center">
-              <button className="flex items-center gap-2 text-left w-[240px]">
+              <button
+                className="flex items-center gap-2 text-left w-[240px]"
+                onClick={handleOpenModalPickerDate}
+              >
                 <Calendar className="size-5 text-zinc-400" />
                 <span className="text-lg text-zinc-400 w-40 flex-1">
                   Quando
                 </span>
               </button>
 
-              {/* <Button variant="secondary">
-                Alterar local/data
-                <Settings2 className="size-5" />
-              </Button> */}
-
-              <Button variant="primary">
-                <span className="font-bold text-base">Continuar</span>
-                <ArrowRight className="size-5" />
-              </Button>
+              {inputGuestPeopleInvite === true ? (
+                <Button
+                  variant="secondary"
+                  onClick={handleExitViewInputGuestPeopleInvite}
+                >
+                  Alterar local/data
+                  <Settings2 className="size-5" />
+                </Button>
+              ) : (
+                <Button
+                  variant="primary"
+                  onClick={handleViewInputGuestPeopleInvite}
+                >
+                  <span className="font-bold text-base">Continuar</span>
+                  <ArrowRight className="size-5" />
+                </Button>
+              )}
             </div>
           </div>
 
-          {/* Input 2 */}
-          <div className="w-[664px] h-16 bg-zinc-900 px-4 rounded-xl flex items-center shadow-shape gap-3">
-            <button className="flex items-center gap-2 flex-1 text-left">
-              <UserRoundPlus className="size-5 text-zinc-400" />
-              <span className="text-zinc-400 text-lg flex-1">
-                Quem estará na viagem?
-              </span>
-            </button>
+          {inputGuestPeopleInvite && (
+            <div className="w-[664px] h-16 bg-zinc-900 px-4 rounded-xl flex items-center shadow-shape gap-3">
+              <button
+                className="flex items-center gap-2 flex-1 text-left"
+                onClick={handleOpenModalGuestsInvite}
+              >
+                <UserRoundPlus className="size-5 text-zinc-400" />
+                <span className="text-zinc-400 text-lg flex-1">
+                  Quem estará na viagem?
+                </span>
+              </button>
 
-            <Button variant="primary">
-              <span className="font-bold text-base">Confirmar Viagem</span>
-              <ArrowRight className="size-5" />
-            </Button>
-          </div>
+              <Button variant="primary">
+                <span className="font-bold text-base">Confirmar Viagem</span>
+                <ArrowRight className="size-5" />
+              </Button>
+            </div>
+          )}
 
           <p className="text-sm text-zinc-500">
             Ao planejar sua viagem pela plann.er você automaticamente concorda{" "}
@@ -88,60 +153,64 @@ export function CreateTripPage() {
             .
           </p>
 
-          {/* Modal guests */}
-          <div className="fixed inset-0 bg-black/60 flex items-center justify-center hidden">
-            <div className="w-[640px] rounded-xl py-5 px-6 shadow-shape bg-zinc-900 space-y-5">
-              <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <h1 className="font-lg font-semibold">
-                    Selecionar convidados
-                  </h1>
-                  <X className="size-5 text-zinc-400 hover:cursor-pointer hover:text-white" />
-                </div>
-                <p className="text-sm text-zinc-400 text-left">
-                  Os convidados irão receber e-mails para confirmar a
-                  participação na viagem.
-                </p>
-
-                <div>
-                  <div className="flex flex-wrap gap-2">
-                    <div className="py-1.5 px-2.5 rounded-md bg-zinc-800 flex justify-between items-center gap-2">
-                      <span className="text-zinc-300">
-                        israelcruzz@contato.com
-                      </span>
-                      <X className="size-4 text-zinc-400" />
-                    </div>
-
-                    <div className="py-1.5 px-2.5 rounded-md bg-zinc-800 flex justify-between items-center gap-2">
-                      <span className="text-zinc-300">
-                        israelcruzz@contato.com
-                      </span>
-                      <X className="size-4 text-zinc-400" />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="w-full h-px bg-zinc-800" />
-
-                <form className="p-2.5 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2">
-                  <div className="px-2 flex items-center flex-1 gap-2">
-                    <AtSign className="text-zinc-400 size-5" />
-                    <input
-                      type="email"
-                      name="email"
-                      placeholder="Digite o email do convidado"
-                      className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
+          {modalGuestPeopleInvite && (
+            <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
+              <div className="w-[640px] rounded-xl py-5 px-6 shadow-shape bg-zinc-900 space-y-5">
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <h1 className="font-lg font-semibold">
+                      Selecionar convidados
+                    </h1>
+                    <X
+                      className="size-5 text-zinc-400 hover:cursor-pointer hover:text-white"
+                      onClick={handleExitModalGuestsInvite}
                     />
                   </div>
+                  <p className="text-sm text-zinc-400 text-left">
+                    Os convidados irão receber e-mails para confirmar a
+                    participação na viagem.
+                  </p>
 
-                  <Button type="submit">
-                    Convidar
-                    <Plus className="size-5" />
-                  </Button>
-                </form>
+                  <div>
+                    <div className="flex flex-wrap gap-2">
+                      <div className="py-1.5 px-2.5 rounded-md bg-zinc-800 flex justify-between items-center gap-2">
+                        <span className="text-zinc-300">
+                          israelcruzz@contato.com
+                        </span>
+                        <X className="size-4 text-zinc-400" />
+                      </div>
+
+                      <div className="py-1.5 px-2.5 rounded-md bg-zinc-800 flex justify-between items-center gap-2">
+                        <span className="text-zinc-300">
+                          israelcruzz@contato.com
+                        </span>
+                        <X className="size-4 text-zinc-400" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="w-full h-px bg-zinc-800" />
+
+                  <form className="p-2.5 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2">
+                    <div className="px-2 flex items-center flex-1 gap-2">
+                      <AtSign className="text-zinc-400 size-5" />
+                      <input
+                        type="email"
+                        name="email"
+                        placeholder="Digite o email do convidado"
+                        className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
+                      />
+                    </div>
+
+                    <Button type="submit">
+                      Convidar
+                      <Plus className="size-5" />
+                    </Button>
+                  </form>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* Modal Confirm */}
           <div className="fixed inset-0 bg-black/60 flex items-center justify-center hidden">
@@ -197,32 +266,33 @@ export function CreateTripPage() {
           </div>
 
           {/* Data Picker */}
-          <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
-            <div className="w-[360px] rounded-xl py-5 px-6 shadow-shape bg-zinc-900 space-y-5">
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <h2 className="font-lg font-semibold">Selecione a data</h2>
-                  <button>
-                    <X className="size-5 text-zinc-400 hover:text-white hover:cursor-pointer" />
-                  </button>
-                </div>
+          {modalPickerDate && (
+            <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
+              <div className="w-[360px] rounded-xl py-5 px-6 shadow-shape bg-zinc-900 space-y-5">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <h2 className="font-lg font-semibold">Selecione a data</h2>
+                    <button onClick={handleExitModalPickerDate}>
+                      <X className="size-5 text-zinc-400 hover:text-white hover:cursor-pointer" />
+                    </button>
+                  </div>
 
-                <DayPicker
-                  locale={ptBR}
-                  mode="range"
-                  disabled={{
-                    before: new Date(
-                      new Date().setDate(new Date().getDate() + 1)
-                    ),
-                  }}
-                  selected={eventStartAndEndDates}
-                  onSelect={setEventStartAndEndDates}
-                  onDayClick={() => console.log(eventStartAndEndDates)}
-                  
-                />
+                  <DayPicker
+                    locale={ptBR}
+                    mode="range"
+                    disabled={{
+                      before: new Date(
+                        new Date().setDate(new Date().getDate() + 1)
+                      ),
+                    }}
+                    selected={eventStartAndEndDates}
+                    onSelect={setEventStartAndEndDates}
+                    onDayClick={() => console.log(eventStartAndEndDates)}
+                  />
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </main>
