@@ -95,10 +95,16 @@ export function CreateTripPage() {
           .concat(format(eventStartAndEndDates.to, "d' de 'LLL"))
       : null;
 
-  console.log("Guest: " + guest);
-  console.log(guestsInvite);
+  const handleSubmitCreateTrip = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-  const handleSubmitCreateTrip = () => {}
+    const formData = new FormData(event.currentTarget);
+
+    const ownerName = formData.get("name");
+    const ownerEmail = formData.get("email");
+
+    if (!ownerName || !ownerEmail) return;
+  };
 
   return (
     <main className="h-screen flex items-center justify-center bg-pattern bg-no-repeat bg-center">
@@ -277,7 +283,7 @@ export function CreateTripPage() {
                     preencha seus dados abaixo:
                   </p>
 
-                  <form className="space-y-3">
+                  <form className="space-y-3" onSubmit={handleSubmitCreateTrip}>
                     <div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2">
                       <User className="text-zinc-400 size-5" />
                       <input
