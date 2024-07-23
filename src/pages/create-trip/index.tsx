@@ -12,7 +12,7 @@ import {
 import { Button } from "../../components/button";
 import { DateRange, DayPicker } from "react-day-picker";
 import { ptBR } from "date-fns/locale";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { format } from "date-fns";
 
 export function CreateTripPage() {
@@ -25,6 +25,8 @@ export function CreateTripPage() {
   const [modalConfirmTrip, setModalConfirmTrip] = useState<boolean>(false);
   const [inputGuestPeopleInvite, setInputGuestPeopleInvite] =
     useState<boolean>(false);
+  const [guestsInvite, setGuestsInvite] = useState<string[]>([]);
+  const [guest, setGuest] = useState<string>("");
 
   const handleViewInputGuestPeopleInvite = () => {
     setInputGuestPeopleInvite(true);
@@ -58,6 +60,23 @@ export function CreateTripPage() {
     setModalConfirmTrip(false);
   };
 
+  const handleRemoveGuest = (guestRemove: string) => {
+    const filteredGuests = guestsInvite.filter(
+      (guest) => guest !== guestRemove
+    );
+
+    setGuestsInvite(filteredGuests);
+  };
+
+  const handleIncrementGuest = (event: FormEvent) => {
+    event.preventDefault();
+
+    if (guest.length === 0) return;
+
+    setGuestsInvite((prev) => [...prev, guest]);
+    setGuest("");
+  };
+
   const displayDate =
     eventStartAndEndDates &&
     eventStartAndEndDates.from &&
@@ -67,7 +86,8 @@ export function CreateTripPage() {
           .concat(format(eventStartAndEndDates.to, "d' de 'LLL"))
       : null;
 
-  console.log("Pick Date: " + displayDate);
+  console.log("Guest: " + guest);
+  console.log(guestsInvite);
 
   return (
     <main className="h-screen flex items-center justify-center bg-pattern bg-no-repeat bg-center">
@@ -78,7 +98,6 @@ export function CreateTripPage() {
             Convide seus amigos e planeje sua próxima viagem!
           </p>
 
-          {/* Input 1 */}
           <div className="w-[664px] h-16 bg-zinc-900 px-4 rounded-xl flex items-center shadow-shape gap-3">
             <div className="flex items-center gap-2 flex-1">
               <MapPin className="size-5 text-zinc-400" />
@@ -86,6 +105,7 @@ export function CreateTripPage() {
                 type="text"
                 className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
                 placeholder="Para onde você vai?"
+                disabled={inputGuestPeopleInvite}
               />
             </div>
 
@@ -93,10 +113,11 @@ export function CreateTripPage() {
               <button
                 className="flex items-center gap-2 text-left w-[240px]"
                 onClick={handleOpenModalPickerDate}
+                disabled={inputGuestPeopleInvite}
               >
                 <Calendar className="size-5 text-zinc-400" />
                 <span className="text-lg text-zinc-400 w-40 flex-1">
-                  Quando
+                  {displayDate || "Quando"}
                 </span>
               </button>
 
@@ -173,25 +194,26 @@ export function CreateTripPage() {
 
                   <div>
                     <div className="flex flex-wrap gap-2">
-                      <div className="py-1.5 px-2.5 rounded-md bg-zinc-800 flex justify-between items-center gap-2">
-                        <span className="text-zinc-300">
-                          israelcruzz@contato.com
-                        </span>
-                        <X className="size-4 text-zinc-400" />
-                      </div>
-
-                      <div className="py-1.5 px-2.5 rounded-md bg-zinc-800 flex justify-between items-center gap-2">
-                        <span className="text-zinc-300">
-                          israelcruzz@contato.com
-                        </span>
-                        <X className="size-4 text-zinc-400" />
-                      </div>
+                      {guestsInvite.map((guest) => {
+                        return (
+                          <div className="py-1.5 px-2.5 rounded-md bg-zinc-800 flex justify-between items-center gap-2">
+                            <span className="text-zinc-300">{guest}</span>
+                            <X
+                              className="size-4 text-zinc-400 hover:text-white"
+                              onClick={() => handleRemoveGuest(guest)}
+                            />
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
 
                   <div className="w-full h-px bg-zinc-800" />
 
-                  <form className="p-2.5 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2">
+                  <form
+                    className="p-2.5 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2"
+                    onSubmit={(e) => handleIncrementGuest(e)}
+                  >
                     <div className="px-2 flex items-center flex-1 gap-2">
                       <AtSign className="text-zinc-400 size-5" />
                       <input
@@ -199,6 +221,8 @@ export function CreateTripPage() {
                         name="email"
                         placeholder="Digite o email do convidado"
                         className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
+                        onChange={(e) => setGuest(e.target.value)}
+                        value={guest}
                       />
                     </div>
 
