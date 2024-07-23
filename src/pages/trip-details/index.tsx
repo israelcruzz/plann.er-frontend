@@ -1,6 +1,7 @@
 import { Calendar, MapPin, Plus, Settings2 } from "lucide-react";
 import { Button } from "../../components/button";
 import { AcitivityItem } from "../../components/activity-item";
+import { Activity } from "../../components/activity";
 
 export function TripDetails() {
   return (
@@ -37,14 +38,23 @@ export function TripDetails() {
           </div>
 
           <div>
-            <div>
-              <div className="flex gap-2">
-                <h3 className="text-zinc-50 text-xl font-semibold">Dia 17</h3>
-                <span className="text-zinc-500 text-sm self-end">Sábado</span>
-              </div>
-
-              <p className="text-zinc-500 text-base">Nenhuma atividade cadastrada nessa data.</p>
-            </div>
+            <Activity
+              occurs={new Date()}
+              activities={[
+                {
+                  title: "Academia em Grupo",
+                  done: true,
+                  id: "2321124",
+                  occurs_at: new Date(),
+                },
+                {
+                  title: "Kart",
+                  done: true,
+                  id: "2321124",
+                  occurs_at: new Date(),
+                },
+              ]}
+            />
 
             <div>
               <h3>Dia 18</h3>
