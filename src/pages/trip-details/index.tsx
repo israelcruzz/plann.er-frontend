@@ -1,5 +1,6 @@
-import { Calendar, MapPin, Settings2 } from "lucide-react";
+import { Calendar, MapPin, Plus, Settings2 } from "lucide-react";
 import { Button } from "../../components/button";
+import { AcitivityItem } from "../../components/activity-item";
 
 export function TripDetails() {
   return (
@@ -24,6 +25,36 @@ export function TripDetails() {
           </Button>
         </div>
       </header>
+
+      <div>
+        <section>
+          <div className="flex justify-between">
+            <h1 className="text-[32px] text-zinc-50 font-bold">Atividades</h1>
+            <Button variant="primary">
+              <Plus size={20} />
+              <span className="font-semibold">Cadastrar Atividade</span>
+            </Button>
+          </div>
+
+          <div>
+            <div>
+              <h3>Dia 17</h3>
+              <span>Sábado</span>
+
+              <p>Nenhuma atividade cadastrada nessa data.</p>
+            </div>
+
+            <div>
+              <h3>Dia 18</h3>
+              <span>Domingo</span>
+
+              <AcitivityItem name="Corrida de Kart" occurs={new Date()} done />
+            </div>
+          </div>
+        </section>
+
+        <section></section>
+      </div>
     </main>
   );
 }
