@@ -27,8 +27,11 @@ export function CreateTripPage() {
     useState<boolean>(false);
   const [guestsInvite, setGuestsInvite] = useState<string[]>([]);
   const [guest, setGuest] = useState<string>("");
+  const [destination, setDestination] = useState<string>("");
 
   const handleViewInputGuestPeopleInvite = () => {
+    if (!destination || !eventStartAndEndDates) return;
+
     setInputGuestPeopleInvite(true);
   };
 
@@ -53,6 +56,8 @@ export function CreateTripPage() {
   };
 
   const handleOpenModalConfirmTrip = () => {
+    if (guestsInvite.length === 0) return;
+
     setModalConfirmTrip(true);
   };
 
@@ -73,6 +78,10 @@ export function CreateTripPage() {
 
     if (guest.length === 0) return;
 
+    const existingGuest = guestsInvite.find((invite) => invite === guest);
+
+    if (existingGuest) return;
+
     setGuestsInvite((prev) => [...prev, guest]);
     setGuest("");
   };
@@ -88,6 +97,8 @@ export function CreateTripPage() {
 
   console.log("Guest: " + guest);
   console.log(guestsInvite);
+
+  const handleSubmitCreateTrip = () => {}
 
   return (
     <main className="h-screen flex items-center justify-center bg-pattern bg-no-repeat bg-center">
@@ -106,6 +117,8 @@ export function CreateTripPage() {
                 className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
                 placeholder="Para onde você vai?"
                 disabled={inputGuestPeopleInvite}
+                onChange={(e) => setDestination(e.target.value)}
+                value={destination}
               />
             </div>
 
@@ -149,11 +162,13 @@ export function CreateTripPage() {
               >
                 <UserRoundPlus className="size-5 text-zinc-400" />
                 <span className="text-zinc-400 text-lg flex-1">
-                  Quem estará na viagem?
+                  {guestsInvite.length > 0
+                    ? `${guestsInvite.length} pessoa(s) convidada(s)`
+                    : "Quem estará na viagem?"}
                 </span>
               </button>
 
-              <Button variant="primary">
+              <Button variant="primary" onClick={handleOpenModalConfirmTrip}>
                 <span className="font-bold text-base">Confirmar Viagem</span>
                 <ArrowRight className="size-5" />
               </Button>
@@ -237,57 +252,62 @@ export function CreateTripPage() {
           )}
 
           {/* Modal Confirm */}
-          <div className="fixed inset-0 bg-black/60 flex items-center justify-center hidden">
-            <div className="w-[640px] rounded-xl py-5 px-6 shadow-shape bg-zinc-900 space-y-5">
-              <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <h1 className="font-lg font-semibold">
-                    Confirmar criação da viagem
-                  </h1>
-                  <X className="size-5 text-zinc-400 hover:cursor-pointer hover:text-white" />
-                </div>
-                <p className="text-sm text-zinc-400 text-left">
-                  Para concluir a criação da viagem para{" "}
-                  <span className="font-semibold text-zinc-100">
-                    Florianópolis, Brasil
-                  </span>{" "}
-                  nas datas de{" "}
-                  <span className="font-semibold text-zinc-100">
-                    16 a 27 de Agosto de 2024
-                  </span>{" "}
-                  preencha seus dados abaixo:
-                </p>
-
-                <form className="space-y-3">
-                  <div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2">
-                    <User className="text-zinc-400 size-5" />
-                    <input
-                      type="text"
-                      name="name"
-                      placeholder="Seu nome completo"
-                      className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
-                    />
-                  </div>
-
-                  <div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2">
-                    <User className="text-zinc-400 size-5" />
-                    <input
-                      type="email"
-                      name="email"
-                      placeholder="Seu e-mail pessoal"
-                      className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
-                    />
-                  </div>
-
-                  <Button type="submit" size="full">
-                    <span className="font-bold">
+          {modalConfirmTrip && (
+            <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
+              <div className="w-[640px] rounded-xl py-5 px-6 shadow-shape bg-zinc-900 space-y-5">
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <h1 className="font-lg font-semibold">
                       Confirmar criação da viagem
-                    </span>
-                  </Button>
-                </form>
+                    </h1>
+                    <X
+                      className="size-5 text-zinc-400 hover:cursor-pointer hover:text-white"
+                      onClick={handleExitModalConfirmTrip}
+                    />
+                  </div>
+                  <p className="text-sm text-zinc-400 text-left">
+                    Para concluir a criação da viagem para{" "}
+                    <span className="font-semibold text-zinc-100">
+                      {destination}
+                    </span>{" "}
+                    nas datas de{" "}
+                    <span className="font-semibold text-zinc-100">
+                      {displayDate}
+                    </span>{" "}
+                    preencha seus dados abaixo:
+                  </p>
+
+                  <form className="space-y-3">
+                    <div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2">
+                      <User className="text-zinc-400 size-5" />
+                      <input
+                        type="text"
+                        name="name"
+                        placeholder="Seu nome completo"
+                        className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
+                      />
+                    </div>
+
+                    <div className="h-14 px-4 bg-zinc-950 border border-zinc-800 rounded-lg flex items-center gap-2">
+                      <User className="text-zinc-400 size-5" />
+                      <input
+                        type="email"
+                        name="email"
+                        placeholder="Seu e-mail pessoal"
+                        className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
+                      />
+                    </div>
+
+                    <Button type="submit" size="full">
+                      <span className="font-bold">
+                        Confirmar criação da viagem
+                      </span>
+                    </Button>
+                  </form>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* Data Picker */}
           {modalPickerDate && (
